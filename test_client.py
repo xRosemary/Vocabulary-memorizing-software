@@ -1,5 +1,5 @@
-from com.SoftwareEngineering.sql_initial import MyDatabase
-from com.SoftwareEngineering.sql_operator import Operator
+from sql_initial import MyDatabase
+from sql_operator import Operator
 
 
 if __name__ == "__main__":
