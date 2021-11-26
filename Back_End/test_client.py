@@ -5,8 +5,9 @@ from Back_End.extraction import Extraction
 if __name__ == "__main__":
     username = input("please input username：")
     password = input("please input password：")
-    listName = input("please input listName：")
-    MyDB = MyDatabase('localhost', username, password, listName)
+    DBName = input("please input DBName：")
+
+    MyDB = MyDatabase('localhost', username, password, DBName)
     DB_Operator = Operator(MyDB.db)
     extraction = Extraction(DB_Operator, "testlist")
     """
@@ -23,7 +24,7 @@ if __name__ == "__main__":
     """
     # print(DB_Operator.find_all("vocabulary"))
     # print(DB_Operator.find_value("testlist", 1))
-    ans = extraction.extraction_word(1,4,2)
+    ans = extraction.extraction_word(5,5,2)
     ans = extraction.clipArray(ans)
     print(ans)
     DB_Operator.closeDB()
