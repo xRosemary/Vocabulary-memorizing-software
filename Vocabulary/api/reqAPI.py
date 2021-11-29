@@ -15,6 +15,7 @@ def getNextWord():
         word_id = 100
         word_right = random.randint(0, 3)
         word_Candidate = ["混淆1", "混淆2", "混淆3"]  # 从数据库中抽取
+        random.shuffle(word_Candidate)  # 打乱顺序
         word_Candidate.insert(word_right, "正确的意思")  # 从数据库中抽取
 
         session["wordlist"] = wordlist
@@ -24,6 +25,7 @@ def getNextWord():
         word_id = 100
         word_right = random.randint(0, 3)
         word_Candidate = ["混淆1", "混淆2", "混淆3"]  # 从数据库中抽取
+        random.shuffle(word_Candidate)
         word_Candidate.insert(word_right, "正确的意思")  # 从数据库中抽取
 
     item = {"WORD": word,
@@ -44,11 +46,11 @@ def setWordList():
     session["wordlist"] = wordlist
     return ""
 
+
 @reqAPI.route("/getAnswer", methods=["post"])
 def getAnswer():
     request.values.get("wordlist")
     pass
-
 
 # （1）result = session[‘key’] ：如果内容不存在，将会报异常
 # （2）result = session.get(‘key’) ：如果内容不存在，将返回None（推荐用法）
