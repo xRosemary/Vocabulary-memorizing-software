@@ -33,7 +33,7 @@ class Extraction:
             if amount1 < len(arr1):
                 arr1 = arr1[:amount1]
             if amount2 < len(arr2):
-                arr2 = arr2[len(arr2)-amount2:]
+                arr2 = arr2[len(arr2) - amount2:]
         except:
             print("Error: unable to get word list")
 
@@ -48,6 +48,7 @@ class Extraction:
                 ans = np.append(ans, arr1, axis=0)
         except:
             print("Error: unable to combine arrays")
+        self.clipArray(ans)
         return ans
 
     # 裁剪数组，去掉id和value字段
@@ -55,7 +56,7 @@ class Extraction:
     def clipArray(arr):
         try:
             if len(arr) != 0:
-                arr = arr[:, 1: len(arr[0]) - 1]
+                arr = arr[:, : len(arr[0]) - 1]
         except:
             print("Error: unable to clip array")
         return arr
