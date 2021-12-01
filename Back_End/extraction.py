@@ -13,7 +13,7 @@ class Extraction:
         self.listName = name
 
     # 根据参数取出指定数量的单词
-    def extraction_word(self, amount0, amount1, amount2):
+    def extraction_word(self, amount0=10, amount1=10, amount2=10): # 先写死
         # 取出value=0的单词
         arr0 = np.array(self.DB_Operator.find_value(self.listName, 0))
         # 取出value>0的单词
@@ -22,23 +22,23 @@ class Extraction:
         arr2 = np.array(self.DB_Operator.find_value(self.listName, -1))
 
         try:
-            # 尝试将取出来的单词列表按value排序，并按指定数量截取
+            # 尝试将取出来的单词列表按value排序
             if len(arr1) > 0:
                 arr1 = arr1[np.lexsort(arr1.T)]
             if len(arr2) > 0:
                 arr2 = arr2[np.lexsort(arr2.T)]
-            # 取指定数量
-            if amount0 < len(arr0):
+            # 按指定数量截取
+            if amount0 < len(arr0): # 当数量充足时，去排序后的前amount个单词
                 arr0 = arr0[:amount0]
             if amount1 < len(arr1):
                 arr1 = arr1[:amount1]
             if amount2 < len(arr2):
                 arr2 = arr2[len(arr2) - amount2:]
-        except:
+        except Exception:
             print("Error: unable to get word list")
 
         # 合并三个数组，并返回
-        ans = np.empty([0, 6])
+        ans = np.empty(0)
         try:
             if len(arr2) > 0:
                 ans = np.append(ans, arr2, axis=0)
@@ -46,17 +46,17 @@ class Extraction:
                 ans = np.append(ans, arr0, axis=0)
             if len(arr1) > 0:
                 ans = np.append(ans, arr1, axis=0)
-        except:
+        except Exception:
             print("Error: unable to combine arrays")
-        self.clipArray(ans)
+        # self.clipArray(ans)
         return ans
 
     # 裁剪数组，去掉id和value字段
-    @staticmethod
-    def clipArray(arr):
-        try:
-            if len(arr) != 0:
-                arr = arr[:, : len(arr[0]) - 1]
-        except:
-            print("Error: unable to clip array")
-        return arr
+    # @staticmethod
+    # def clipArray(arr):
+    #     try:
+    #         if len(arr) != 0:
+    #             arr = arr[:, : len(arr[0]) - 1]
+    #     except:
+    #         print("Error: unable to clip array")
+    #     return arr
