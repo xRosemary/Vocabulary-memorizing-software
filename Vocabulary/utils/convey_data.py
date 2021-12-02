@@ -6,7 +6,7 @@ from Vocabulary.utils.sql.extraction import Extraction
 class Convey:
     def __init__(self):
         username = "root"
-        password = "xym981120"
+        password = ""
         staticDBName = "static_db"
         userDBName = "user_db"
         MyDB = MyDatabase('localhost', username, password, staticDBName)
