@@ -24,16 +24,19 @@ class Extraction:
         try:
             # 尝试将取出来的单词列表按value排序
             if len(arr1) > 0:
-                arr1 = arr1[np.lexsort(arr1.T)]
+                # sorted(列表，key = lambda 形参：形参[str键名称])
+                arr1 = sorted(arr1,key=lambda word : word["VALUE"])
             if len(arr2) > 0:
-                arr2 = arr2[np.lexsort(arr2.T)]
+                arr2 = sorted(arr2, key=lambda word: word["VALUE"])
+
             # 按指定数量截取
             if amount0 < len(arr0): # 当数量充足时，去排序后的前amount个单词
                 arr0 = arr0[:amount0]
             if amount1 < len(arr1):
                 arr1 = arr1[:amount1]
             if amount2 < len(arr2):
-                arr2 = arr2[len(arr2) - amount2:]
+                arr2 = arr2[:amount2]
+                # arr2 = arr2[len(arr2) - amount2:]
         except Exception:
             print("Error: unable to get word list")
 
