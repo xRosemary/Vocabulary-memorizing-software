@@ -1,6 +1,6 @@
-from Back_End.sql_initial import MyDatabase
-from Back_End.sql_operator import Operator
-from Back_End.extraction import Extraction
+from Vocabulary.utils.sql.sql_initial import MyDatabase
+from Vocabulary.utils.sql.sql_operator import Operator
+from Vocabulary.utils.sql.extraction import Extraction
 
 
 class Convey:
