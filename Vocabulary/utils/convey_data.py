@@ -10,3 +10,11 @@ class Convey:
         extraction = Extraction(self.DB_Operator, "vocabulary_" + str(userID))
         ans = extraction.extraction_word()
         return list(ans)
+    
+    def getCandidate(self, id_set):
+        # 根据id取出混淆项的中文
+        Candidate_Word = []
+        for i in id_set:
+            p = self.DB_Operator.get_filed(name="vocabulary_total", _id=i, filed="PARAPHRASE")
+            Candidate_Word.append(p[0]["PARAPHRASE"])
+        return Candidate_Word

@@ -1,6 +1,6 @@
 from flask import Flask, render_template
 import os
-from utils.reqAPI import reqAPI
+from Vocabulary.utils.reqAPI import reqAPI
 
 # from utils.sql.sql_initial import *
 # from utils.sql.sql_operator import *

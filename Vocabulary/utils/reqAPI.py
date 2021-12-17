@@ -10,7 +10,6 @@ wordlist = convey.getData(1)
 
 @reqAPI.route('/getNextWord', methods=["post"])
 def getNextWord():
-    # wordlist = session.get("wordlist")
 
     word = wordlist.pop()
     WORD_ID = word["ID"]
@@ -18,14 +17,12 @@ def getNextWord():
     # 取出三个不等于该单词id的整数
     Candidate_Set = set()
     while len(Candidate_Set) < 3:
-        i = random.randint(0, len(wordlist)-1)
+        i = random.randint(1, 2045)
         if i != WORD_ID:
             Candidate_Set.add(i)
 
     # 根据id取出混淆项的中文
-    Candidate_Word = []
-    for i in Candidate_Set:
-        Candidate_Word.append(wordlist[i]["PARAPHRASE"])
+    Candidate_Word = convey.getCandidate(Candidate_Set)
 
     # 将混淆项与所背单词组合
     Candidate = [{"CN": word["PARAPHRASE"], "ID": WORD_ID},
