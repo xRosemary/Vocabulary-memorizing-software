@@ -1,4 +1,5 @@
 import pymysql
+from Vocabulary.sql.sql_initial import MyDatabase
 
 
 class Operator:
@@ -6,9 +7,13 @@ class Operator:
     这个类主要用于操作数据库，包括增删改查
     """
 
-    def __init__(self, db, user_db):
-        self.db = db
-        self.user_db = user_db
+    def __init__(self):
+        username = "root"
+        password = "123456"
+        staticDBName = "static_db"
+        userDBName = "user_db"
+        self.db = MyDatabase('localhost', username, password, staticDBName).db
+        self.user_db = MyDatabase('localhost', username, password, userDBName).db
 
     # 创建列表
     # def creatList(self, name):
@@ -211,6 +216,7 @@ class Operator:
             print("Error: unable to update field")
         cursor.close()
 
+    # 根据用户id创建用户表
     def creatUserList(self, id):
         cursor = self.user_db.cursor(pymysql.cursors.DictCursor)
         sql_1 = """CREATE TABLE IF NOT EXISTS vocabulary_%d (
@@ -232,6 +238,63 @@ class Operator:
             self.user_db.rollback()
             print("Error: unable to create userList")
         cursor.close()
+
+    # 创建账户并调用creatUserListf方法
+    def createAccount(self, account, password, name="users"):
+        cursor = self.db.cursor(pymysql.cursors.DictCursor)
+        # SQL 查询语句
+        sql = "SELECT id FROM `%s` WHERE account LIKE '%s'" % (name, account)
+        sql_2 = """INSERT INTO `%s`
+                (account, password) 
+                 VALUES ('%s', '%s')
+                 """ % (name, account, password)
+        try:
+            # 执行SQL语句
+            cursor.execute(sql)
+            # 获取所有记录列表
+            results = cursor.fetchall()
+            if len(results) == 0:
+                cursor.execute(sql_2)
+                print("created")
+                # 获取所创建账户的id,并根据id创建一个表
+                cursor.execute(sql)
+                results = cursor.fetchall()
+                self.db.commit()
+                self.creatUserList(results[0]["id"])
+                print("user's list has created")
+            else:
+                print("account is existed")
+            self.db.commit()
+        except Exception:
+            self.db.rollback()
+            print("Error: unable to create account")
+        cursor.close()
+
+    # 登录，若成功返回用户id，若不存在账户则返回-1，若密码错误则返回-2
+    def login(self, account, password, name="users"):
+        id = -1
+        cursor = self.db.cursor(pymysql.cursors.DictCursor)
+        # SQL 查询语句
+        sql = "SELECT * FROM `%s` WHERE account LIKE '%s'" % (name, account)
+        try:
+            # 执行SQL语句
+            cursor.execute(sql)
+            # 获取所有记录列表
+            results = cursor.fetchall()
+            if len(results) == 0:
+                # 用户不存在则返回-1
+                id = -1
+            else:
+                if results[0]["password"] == password:
+                    id = results[0]["id"]
+                else:  # 用户密码错误则返回-2
+                    id = -2
+            self.db.commit()
+        except Exception:
+            self.db.rollback()
+            print("Error: unable to login")
+        cursor.close()
+        return id
 
     # 关闭数据库
     def closeDB(self):

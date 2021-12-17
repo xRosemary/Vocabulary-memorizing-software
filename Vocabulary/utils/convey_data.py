@@ -1,17 +1,10 @@
-from Vocabulary.utils.sql.sql_initial import MyDatabase
-from Vocabulary.utils.sql.sql_operator import Operator
-from Vocabulary.utils.sql.extraction import Extraction
+from Vocabulary.sql.sql_operator import Operator
+from Vocabulary.sql.extraction import Extraction
 
 
 class Convey:
     def __init__(self):
-        username = "root"
-        password = ""
-        staticDBName = "static_db"
-        userDBName = "user_db"
-        MyDB = MyDatabase('localhost', username, password, staticDBName)
-        UserDB = MyDatabase('localhost', username, password, userDBName)
-        self.DB_Operator = Operator(MyDB.db, UserDB.db)
+        self.DB_Operator = Operator()
 
     def getData(self, userID):
         extraction = Extraction(self.DB_Operator, "vocabulary_" + str(userID))

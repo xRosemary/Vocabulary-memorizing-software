@@ -18,7 +18,7 @@ def getNextWord():
     # 取出三个不等于该单词id的整数
     Candidate_Set = set()
     while len(Candidate_Set) < 3:
-        i = random.randint(0, len(wordlist))
+        i = random.randint(0, len(wordlist)-1)
         if i != WORD_ID:
             Candidate_Set.add(i)
 
