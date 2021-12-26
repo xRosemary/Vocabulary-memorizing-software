@@ -92,6 +92,7 @@ $(".candidate_btn").click(function () {
     console.log(this.value, currentAnswer)
 
     if (parseInt(this.value) === currentAnswer) {
+        right_audio.play()
         if (currentWordNum === parseInt(totalNum) - 1) {
             ajax.summitSocre();
             return
@@ -99,7 +100,7 @@ $(".candidate_btn").click(function () {
         id_list.push(currentAnswer)
         score_list.push(currentScore)
         currentScore = 0
-        right_audio.play()
+
         console.log("right")
 
         currentWordNum += 1;
