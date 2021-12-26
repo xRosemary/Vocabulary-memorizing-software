@@ -18,4 +18,6 @@ def login():
 
 @loginAPI.route('/signup', methods=["post"])
 def signup():
+    username = request.values.get("username")
+    password = request.values.get("password")
     return {"state": 1}
