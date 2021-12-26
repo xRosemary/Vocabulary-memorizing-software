@@ -18,4 +18,12 @@ def login():
 
 @loginAPI.route('/signup', methods=["post"])
 def signup():
-    return {"state": 1}
+    username = request.values.get("username")
+    password = request.values.get("password")
+    user_info = sql_login.createUser(username, password)
+    message = {"state": -1}
+    if user_info["state"] > 0:
+        message["state"] = 1
+    else:
+        print("error")
+    return message
