@@ -1,28 +1,30 @@
 from flask import Flask, render_template
 import os
-from Vocabulary.utils.reqAPI import reqAPI
-
-# from utils.sql.sql_initial import *
-# from utils.sql.sql_operator import *
-# from utils.sql.extraction import *
-
+from utils.login import loginAPI
+from utils.reqAPI import reqAPI
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.urandom(24)
+app.register_blueprint(loginAPI, url_prefix='/login')
 app.register_blueprint(reqAPI, url_prefix='/req')
-
-# MyDB = MyDatabase('localhost', "root", "123456", "Project1")
-# DB_Operator = Operator(MyDB.db)
-# extraction = Extraction(DB_Operator, "testlist")
 
 
 @app.route('/')
-def reIndex():
+def login_html():
+    return render_template('login.html')
+
+
+@app.route('/index')
+def index_html():
     return render_template('newindex.html')
 
 
 @app.route('/learn')
-def reLearn():
+def learn_html():
     return render_template('newlearn.html')
+
+@app.route('/signup')
+def signup_html():
+    return render_template('signup.html')
 
 
 if __name__ == '__main__':

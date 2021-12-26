@@ -6,6 +6,7 @@ let Candidate_3 = document.getElementById("Candidate_3");
 
 let currentAnswer = 0;
 let ajax = {};
+
 ajax.getNextWord = function () {
     $("#Candidate_0").removeClass("btn-danger");
     $("#Candidate_0").addClass("btn-primary");

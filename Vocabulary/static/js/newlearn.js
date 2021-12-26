@@ -4,9 +4,59 @@ let Candidate_1 = document.getElementById("Candidate_1");
 let Candidate_2 = document.getElementById("Candidate_2");
 let Candidate_3 = document.getElementById("Candidate_3");
 
-let currentAnswer = 0;
+
 let ajax = {};
-ajax.getNextWord = function () {
+let id_list = []
+let score_list = []
+
+let currentScore = 0
+
+let currentWordNum = 0
+let totalNum = 0
+
+$(document).ready(function () {
+    ajax.getWordList();
+})
+ajax.getWordList = function () {
+    $.ajax({
+        type: "post",
+        url: "/req/getWordList",
+        success: function (d) {
+            console.log(d)
+            let wordlist = JSON.stringify(d["result"])
+            sessionStorage.setItem("wordlist", wordlist)
+            totalNum = JSON.stringify(d["total"])
+
+            getNextWord()
+        },
+        error: function () {
+            alert("error");
+        }
+    })
+}
+ajax.summitSocre = function () {
+    console.log(JSON.stringify(id_list))
+    console.log(JSON.stringify(score_list))
+    $.ajax({
+        type: "post",
+        url: "/req/summitScore",
+        data: {"id_list": JSON.stringify(id_list), "score_list": JSON.stringify(score_list)},
+        success: function () {
+            alert("本次学习完成");
+            location.href = "index"
+
+        },
+        error: function () {
+            alert("error");
+        }
+    })
+}
+
+function getNextWord() {
+
+    let wordlist = JSON.parse(sessionStorage.getItem("wordlist"))
+
+    // 恢复默认样式
     $("#Candidate_0").removeClass("btn-danger");
     $("#Candidate_0").addClass("btn-primary");
     $("#Candidate_1").removeClass("btn-danger");
@@ -16,43 +66,44 @@ ajax.getNextWord = function () {
     $("#Candidate_3").removeClass("btn-danger");
     $("#Candidate_3").addClass("btn-primary");
 
-    $.ajax({
-        type: "post",
-        url: "/req/getNextWord",
-        success: function (d) {
-            word_str.innerText = d['WORD']
 
-            Candidate_0.innerText = d['Candidate'][0]["CN"]
-            Candidate_0.setAttribute("value", d['Candidate'][0]["ID"])
-            Candidate_1.innerText = d['Candidate'][1]["CN"]
-            Candidate_1.setAttribute("value", d['Candidate'][1]["ID"])
-            Candidate_2.innerText = d['Candidate'][2]["CN"]
-            Candidate_2.setAttribute("value", d['Candidate'][2]["ID"])
-            Candidate_3.innerText = d['Candidate'][3]["CN"]
-            Candidate_3.setAttribute("value", d['Candidate'][3]["ID"])
-            console.log(d)
-            currentAnswer = d['WORD_ID']
+    word_str.innerText = wordlist[currentWordNum]["WORD"]
+    Candidate_0.innerText = wordlist[currentWordNum]["Candidate"][0]["str"]
+    Candidate_0.setAttribute("value", wordlist[currentWordNum]["Candidate"][0]["id"])
+    Candidate_1.innerText = wordlist[currentWordNum]["Candidate"][1]["str"]
+    Candidate_1.setAttribute("value", wordlist[currentWordNum]["Candidate"][1]["id"])
+    Candidate_2.innerText = wordlist[currentWordNum]["Candidate"][2]["str"]
+    Candidate_2.setAttribute("value", wordlist[currentWordNum]["Candidate"][2]["id"])
+    Candidate_3.innerText = wordlist[currentWordNum]["Candidate"][3]["str"]
+    Candidate_3.setAttribute("value", wordlist[currentWordNum]["Candidate"][3]["id"])
 
-        },
-        error: function () {
-            alert("error");
-        }
-    })
+
 }
-$(document).ready(function () {
-    ajax.getNextWord();
-})
 
 $(".candidate_btn").click(function () {
+    let wordlist = JSON.parse(sessionStorage.getItem("wordlist"))
+    let currentAnswer = wordlist[currentWordNum]["ID"]
     console.log(this.value, currentAnswer)
 
     if (parseInt(this.value) === currentAnswer) {
-        ajax.getNextWord();
+        if (currentWordNum === parseInt(totalNum) - 1) {
+            ajax.summitSocre();
+            return
+        }
+        id_list.push(currentAnswer)
+        score_list.push(currentScore)
+        currentScore = 0
+        console.log("right")
+
+        currentWordNum += 1;
+        getNextWord();
     } else {
         $(this).removeClass("btn-primary");
         $(this).addClass("btn-danger")
+        currentScore -= 1
         console.log("wrong")
         console.log(this.value);
+        console.log(currentScore);
     }
 
 })
