@@ -38,8 +38,9 @@ class sql_login(Operator):
         return user_info
 
     # 创建账户并调用creatUserList方法
-    def createUser(self, account, password, identity=0):
-        cursor = self.db.cursor(pymysql.cursors.DictCursor)
+    @classmethod
+    def createUser(cls, account, password, identity=0):
+        cursor = cls.db.cursor(pymysql.cursors.DictCursor)
         info = {"state": -1}
         # SQL 查询语句
         sql = "SELECT id FROM users WHERE account LIKE '%s'" % account
@@ -58,15 +59,15 @@ class sql_login(Operator):
                 # 获取所创建账户的id,并根据id创建一个表
                 cursor.execute(sql)
                 results = cursor.fetchall()
-                self.db.commit()
-                self.creatUserList(results[0]["id"])
+                cls.db.commit()
+                cls.creatUserList(results[0]["id"])
                 info["state"] = 1
                 print("user's list has created")
             else:
                 info["state"] = -2
-            self.db.commit()
+            cls.db.commit()
         except Exception:
-            self.db.rollback()
+            cls.db.rollback()
             info["state"] = -3
             return info
 
@@ -74,8 +75,9 @@ class sql_login(Operator):
         return info
 
     # 根据用户id创建用户表
-    def creatUserList(self, id):
-        cursor = self.user_db.cursor(pymysql.cursors.DictCursor)
+    @classmethod
+    def creatUserList(cls, id):
+        cursor = cls.user_db.cursor(pymysql.cursors.DictCursor)
         sql_1 = """CREATE TABLE IF NOT EXISTS vocabulary_%d (
                                      ID INT NOT NULL,
                                      WORD  CHAR(20) NOT NULL,
@@ -90,13 +92,8 @@ class sql_login(Operator):
             cursor.execute(sql_1)
             cursor.execute(sql_2)
             cursor.execute(sql_3)
-            self.user_db.commit()
+            cls.user_db.commit()
         except Exception:
-            self.user_db.rollback()
+            cls.user_db.rollback()
             print("Error: unable to create userList")
         cursor.close()
-
-
-a = sql_login()
-print(a.identify("hjh", "123456"))
-# print(a.createUser("bbb", "123456"))
