@@ -15,13 +15,7 @@ def getWordList():
 @reqAPI.route('/summitScore', methods=["post"])
 def summitScore():
     user_id = session["id"]
-    # 分割文本
-    id_list = request.values.get("id_list").strip('[]').split(',')
-    score_list = request.values.get("score_list").strip('[]').split(',')
-
-    # 转换数据类型
-    id_list = [int(x) for x in id_list]
-    score_list = [int(x) for x in score_list]
+    id_list: list = request.form.getlist("id_list[]", type=int)
+    score_list: list = request.form.getlist("score_list[]", type=int)
     User.set_value(id_list, score_list, user_id)
-
     return {}
