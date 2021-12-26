@@ -37,7 +37,7 @@ class User(Operator):
     @classmethod
     def get_candidate(cls, user_id, correct_id):  # 取混淆项
         listName = "vocabulary_%s" % user_id
-        sql = "SELECT ID, PARAPHRASE FROM %s WHERE ID <> %d LIMIT 3" % (listName, correct_id)
+        sql = "SELECT ID, PARAPHRASE FROM %s WHERE ID <> %d ORDER BY rand() LIMIT 3" % (listName, correct_id)
         cursor = cls.user_db.cursor(pymysql.cursors.DictCursor)
         cursor.execute(sql)
         result = cursor.fetchall()
@@ -54,13 +54,13 @@ class User(Operator):
         else:
             sql = ""
             for i in range(len(id_list)):
-                print(wrong_list[i])
                 if wrong_list[i] == 0:
                     sql = "UPDATE %s SET VALUE = VALUE + 2 WHERE ID = %d" % (table_name, id_list[i])
                 else:
                     sql = "UPDATE %s SET VALUE = VALUE + %d WHERE ID = %d" % (table_name, wrong_list[i], id_list[i])
                 cursor = cls.user_db.cursor(pymysql.cursors.DictCursor)
                 cursor.execute(sql)
+            cls.user_db.rollback()
             cls.user_db.commit()
             cursor.close()
         return True
