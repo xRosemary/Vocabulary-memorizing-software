@@ -1,0 +1,21 @@
+body {
+    background: url("/static/img/background.jpg") no-repeat center fixed;
+    background-size: cover;
+}
+
+body {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.panel {
+    display: grid;
+    justify-content: center;
+    min-height: 400px;
+    min-width: 500px;
+    max-width: 50%;
+    margin: auto;
+}

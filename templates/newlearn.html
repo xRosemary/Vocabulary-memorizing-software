@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="utf-8">
+    <title>背单词系统</title>
+    <script src="../static/js/jquery-3.6.0.js"></script>
+    <link href="../static/css/newlearn.css" rel="stylesheet"/>
+    <link href="../static/css/star.css" rel="stylesheet"/>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj"
+            crossorigin="anonymous"></script>
+    <style>
+
+    </style>
+</head>
+
+
+<body>
+<div class="container-fluid">
+    <div id="remember-word" class="shadow-lg p-3 mb-5 rounded">
+        <div id="word_str" style="color:#f0f0f0;text-align:center;font-size:40px">aaa</div>
+        <div id="candidate_list" class="candidate_list"
+             style="display: block; grid-gap:50px;text-align:center;margin: 10px">
+            <div>
+                <button id="Candidate_0" class="candidate_btn btn btn-primary" value=0></button>
+            </div>
+            <div>
+                <button id="Candidate_1" class="candidate_btn btn btn-primary" value=1></button>
+            </div>
+            <div>
+                <button id="Candidate_2" class="candidate_btn btn btn-primary" value=2></button>
+            </div>
+            <div>
+                <button id="Candidate_3" class="candidate_btn btn btn-primary" value=3></button>
+            </div>
+
+        </div>
+    </div>
+    <div class="index">
+        <div id="stars">
+            <div class="star" style="top: 0px;left: 500px;"></div>
+        </div>
+    </div>
+</div>
+
+
+</body>
+<script src="../static/js/newlearn.js"></script>
+<script src="../static/js/star.js"></script>
+
+
+</html>
+
