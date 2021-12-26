@@ -2,7 +2,7 @@
 # 面向对象是已经登录的用户
 
 import pymysql
-
+import random
 from sql.sql_operator import Operator
 
 
@@ -16,7 +16,9 @@ class User(Operator):
         cursor.execute(sql1)
         result = cursor.fetchall()
         for i in result:
-            i["Candidate"] = [{"id": i["ID"], "str": i["PARAPHRASE"]}, {"id": 666, "str": "混淆A"}, {"id": 777, "str": "混淆A"}, {"id": 888, "str": "混淆C"}]
+            Candidate = [{"id": i["ID"], "str": i["PARAPHRASE"]}, {"id": 666, "str": "混淆A"}, {"id": 777, "str": "混淆B"}, {"id": 888, "str": "混淆C"}]
+            random.shuffle(Candidate)
+            i["Candidate"] = Candidate
         cursor.close()
         return result
 

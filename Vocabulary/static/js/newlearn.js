@@ -1,9 +1,12 @@
 let word_str = document.getElementById("word_str");
+let phon_str = document.getElementById("phon_str");
 let Candidate_0 = document.getElementById("Candidate_0");
 let Candidate_1 = document.getElementById("Candidate_1");
 let Candidate_2 = document.getElementById("Candidate_2");
 let Candidate_3 = document.getElementById("Candidate_3");
 
+const right_audio = new Audio("/static/audio/right.mp3")
+const wrong_audio = new Audio("/static/audio/wrong.mp3")
 
 let ajax = {};
 let id_list = []
@@ -53,9 +56,6 @@ ajax.summitSocre = function () {
 }
 
 function getNextWord() {
-
-    let wordlist = JSON.parse(sessionStorage.getItem("wordlist"))
-
     // 恢复默认样式
     $("#Candidate_0").removeClass("btn-danger");
     $("#Candidate_0").addClass("btn-primary");
@@ -66,8 +66,14 @@ function getNextWord() {
     $("#Candidate_3").removeClass("btn-danger");
     $("#Candidate_3").addClass("btn-primary");
 
+    let wordlist = JSON.parse(sessionStorage.getItem("wordlist"))
+    let audio = new Audio(wordlist[currentWordNum]["PHONETIC"])
+
+    audio.play()
+
 
     word_str.innerText = wordlist[currentWordNum]["WORD"]
+    phon_str.innerText = wordlist[currentWordNum]["PRONOUNCE"]
     Candidate_0.innerText = wordlist[currentWordNum]["Candidate"][0]["str"]
     Candidate_0.setAttribute("value", wordlist[currentWordNum]["Candidate"][0]["id"])
     Candidate_1.innerText = wordlist[currentWordNum]["Candidate"][1]["str"]
@@ -93,6 +99,7 @@ $(".candidate_btn").click(function () {
         id_list.push(currentAnswer)
         score_list.push(currentScore)
         currentScore = 0
+        right_audio.play()
         console.log("right")
 
         currentWordNum += 1;
@@ -101,6 +108,8 @@ $(".candidate_btn").click(function () {
         $(this).removeClass("btn-primary");
         $(this).addClass("btn-danger")
         currentScore -= 1
+        wrong_audio.currentTime = 0;
+        wrong_audio.play()
         console.log("wrong")
         console.log(this.value);
         console.log(currentScore);

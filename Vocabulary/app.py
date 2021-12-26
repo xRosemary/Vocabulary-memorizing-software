@@ -2,6 +2,7 @@ from flask import Flask, render_template
 import os
 from utils.login import loginAPI
 from utils.reqAPI import reqAPI
+
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.urandom(24)
 app.register_blueprint(loginAPI, url_prefix='/login')
@@ -21,6 +22,7 @@ def index_html():
 @app.route('/learn')
 def learn_html():
     return render_template('newlearn.html')
+
 
 @app.route('/signup')
 def signup_html():
