@@ -1,8 +1,8 @@
 # 该类用于用户的取单词、提交单词等事件
 # 面向对象是已经登录的用户
 import random
-
 import pymysql
+import matplotlib.pyplot as plt
 
 from sql.sql_operator import Operator
 
@@ -64,3 +64,71 @@ class User(Operator):
             cls.user_db.commit()
             cursor.close()
         return True
+
+    # 根据数据的四分位数，并做出盒图
+    @classmethod
+    def BoxPlot(cls, user_id):
+        table_name = "vocabulary_%s" % user_id
+
+        sql = "SELECT VALUE FROM %s" % table_name
+
+        cursor = cls.user_db.cursor()
+        cursor.execute(sql)  # 取出所有单词的数值
+        result = cursor.fetchall()
+        cursor.close()
+
+        fig, axes = plt.subplots()
+        plt.plot(kind='box', ax=result)
+        fig.savefig('box.png')  # 将绘制的图形保存为box(i-1).png
+        plt.show()  # 绘制盒图
+
+    # 绘制直方图
+    @classmethod
+    def Histogram(cls, user_id):
+        table_name = "vocabulary_%s" % user_id
+
+        sql = "SELECT VALUE FROM %s" % table_name
+
+        cursor = cls.user_db.cursor()
+        cursor.execute(sql)  # 取出所有单词的数值
+        result = cursor.fetchall()
+        cursor.close()
+
+        result = list(map(list, zip(*result)))  # 转置
+
+        plt.hist(x=result,  # 指定绘图数据
+                 bins=5,  # 指定直方图中条块的个数
+                 color='steelblue',  # 指定直方图的填充色
+                 edgecolor='black'  # 指定直方图的边框色
+                 )
+
+        # 添加x轴和y轴标签
+        plt.xlabel('value')
+        plt.ylabel('frequency')
+
+        # 添加标题
+        plt.title("Histogram")
+        # 保存图片
+        plt.savefig('histogram.png')
+        # 显示图形
+        plt.show()
+
+    # 绘制散布图
+    @classmethod
+    def ScatterPlot(cls, user_id):
+        table_name = "vocabulary_%s" % user_id
+
+        sql = "SELECT VALUE FROM %s" % table_name
+
+        cursor = cls.user_db.cursor()
+        cursor.execute(sql)  # 取出所有单词的数值
+        result = cursor.fetchall()
+        cursor.close()
+        # 绘制图片
+        plt.plot(result, linestyle='', marker='.')
+        # 添加标题
+        plt.title("Scatter Diagram")
+        # 保存图片
+        plt.savefig('Scatter.png')
+        # 显示图形
+        plt.show()
