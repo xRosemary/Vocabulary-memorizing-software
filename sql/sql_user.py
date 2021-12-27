@@ -2,7 +2,10 @@
 # 面向对象是已经登录的用户
 import random
 import pymysql
+import pandas as pd
+import base64
 import matplotlib.pyplot as plt
+from io import BytesIO
 
 from sql.sql_operator import Operator
 
@@ -76,11 +79,28 @@ class User(Operator):
         cursor.execute(sql)  # 取出所有单词的数值
         result = cursor.fetchall()
         cursor.close()
+        result = pd.DataFrame(result)  # 转换数据类型
 
+        # -----------
         fig, axes = plt.subplots()
-        plt.plot(kind='box', ax=result)
-        fig.savefig('box.png')  # 将绘制的图形保存为box(i-1).png
-        plt.show()  # 绘制盒图
+        result.plot(kind='box', ax=axes)
+        # 添加标题
+        plt.title("Box Diagram")
+        # -----------
+
+        # 转成图片的步骤
+        sio = BytesIO()
+        plt.savefig(sio, format='png')
+        data = base64.encodebytes(sio.getvalue()).decode()
+        html = '''
+                   <html>
+                       <body>
+                           <img src="data:image/png;base64,{}" />
+                       </body>
+                    <html>
+                '''
+        plt.close()
+        return html.format(data)
 
     # 绘制直方图
     @classmethod
@@ -96,6 +116,7 @@ class User(Operator):
 
         result = list(map(list, zip(*result)))  # 转置
 
+        # -----------
         plt.hist(x=result,  # 指定绘图数据
                  bins=5,  # 指定直方图中条块的个数
                  color='steelblue',  # 指定直方图的填充色
@@ -108,10 +129,21 @@ class User(Operator):
 
         # 添加标题
         plt.title("Histogram")
-        # 保存图片
-        plt.savefig('histogram.png')
-        # 显示图形
-        plt.show()
+        # -----------
+
+        # 转成图片的步骤
+        sio = BytesIO()
+        plt.savefig(sio, format='png')
+        data = base64.encodebytes(sio.getvalue()).decode()
+        html = '''
+                   <html>
+                       <body>
+                           <img src="data:image/png;base64,{}" />
+                       </body>
+                    <html>
+                '''
+        plt.close()
+        return html.format(data)
 
     # 绘制散布图
     @classmethod
@@ -124,11 +156,24 @@ class User(Operator):
         cursor.execute(sql)  # 取出所有单词的数值
         result = cursor.fetchall()
         cursor.close()
+
+        # -----------
         # 绘制图片
         plt.plot(result, linestyle='', marker='.')
         # 添加标题
         plt.title("Scatter Diagram")
-        # 保存图片
-        plt.savefig('Scatter.png')
-        # 显示图形
-        plt.show()
+        # -----------
+
+        # 转成图片的步骤
+        sio = BytesIO()
+        plt.savefig(sio, format='png')
+        data = base64.encodebytes(sio.getvalue()).decode()
+        html = '''
+               <html>
+                   <body>
+                       <img src="data:image/png;base64,{}" />
+                   </body>
+                <html>
+            '''
+        plt.close()
+        return html.format(data)
