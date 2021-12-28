@@ -19,3 +19,5 @@ def summitScore():
     score_list: list = request.form.getlist("score_list[]", type=int)
     User.set_value(id_list, score_list, user_id)
     return {}
+
+

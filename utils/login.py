@@ -1,4 +1,4 @@
-from flask import Blueprint, request, session
+from flask import Blueprint, request, session, render_template
 from sql.sql_login import sql_login
 from sql.sql_user import User
 
@@ -34,4 +34,5 @@ def signup():
 def getDataPic():
     user_id = session["id"]
     html = User.getDataPic(user_id)
+
     return html
