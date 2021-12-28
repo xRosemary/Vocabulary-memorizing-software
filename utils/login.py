@@ -1,5 +1,6 @@
 from flask import Blueprint, request, session
 from sql.sql_login import sql_login
+from sql.sql_user import User
 
 loginAPI = Blueprint('loginAPI', __name__)
 
@@ -27,3 +28,10 @@ def signup():
     else:
         print("error")
     return message
+
+
+@loginAPI.route('/getDataPic')
+def getDataPic():
+    user_id = session["id"]
+    html = User.getDataPic(user_id)
+    return html
