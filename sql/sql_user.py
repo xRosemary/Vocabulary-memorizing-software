@@ -68,9 +68,8 @@ class User(Operator):
             cursor.close()
         return True
 
-    # 根据数据的四分位数，并做出盒图
     @classmethod
-    def BoxPlot(cls, user_id):
+    def getDataPic(cls, user_id):
         table_name = "vocabulary_%s" % user_id
 
         sql = "SELECT VALUE FROM %s" % table_name
@@ -79,101 +78,52 @@ class User(Operator):
         cursor.execute(sql)  # 取出所有单词的数值
         result = cursor.fetchall()
         cursor.close()
-        result = pd.DataFrame(result)  # 转换数据类型
 
+        # Box图转换数据类型
+        result_box = pd.DataFrame(result)
         # -----------
         fig, axes = plt.subplots()
-        result.plot(kind='box', ax=axes)
-        # 添加标题
+        result_box.plot(kind='box', ax=axes)
         plt.title("Box Diagram")
-        # -----------
 
-        # 转成图片的步骤
-        sio = BytesIO()
-        plt.savefig(sio, format='png')
-        data = base64.encodebytes(sio.getvalue()).decode()
-        html = '''
-                   <html>
-                       <body>
-                           <img src="data:image/png;base64,{}" />
-                       </body>
-                    <html>
-                '''
+        sio_box = BytesIO()
+        plt.savefig(sio_box, format='png')
+        data_box = base64.encodebytes(sio_box.getvalue()).decode()
         plt.close()
-        return html.format(data)
 
-    # 绘制直方图
-    @classmethod
-    def Histogram(cls, user_id):
-        table_name = "vocabulary_%s" % user_id
-
-        sql = "SELECT VALUE FROM %s" % table_name
-
-        cursor = cls.user_db.cursor()
-        cursor.execute(sql)  # 取出所有单词的数值
-        result = cursor.fetchall()
-        cursor.close()
-
-        result = list(map(list, zip(*result)))  # 转置
-
-        # -----------
-        plt.hist(x=result,  # 指定绘图数据
+        # 直方图转换数据类型
+        result_histo = list(map(list, zip(*result)))  # 转置
+        plt.hist(x=result_histo,  # 指定绘图数据
                  bins=5,  # 指定直方图中条块的个数
                  color='steelblue',  # 指定直方图的填充色
                  edgecolor='black'  # 指定直方图的边框色
                  )
 
-        # 添加x轴和y轴标签
         plt.xlabel('value')
         plt.ylabel('frequency')
-
-        # 添加标题
         plt.title("Histogram")
-        # -----------
 
-        # 转成图片的步骤
-        sio = BytesIO()
-        plt.savefig(sio, format='png')
-        data = base64.encodebytes(sio.getvalue()).decode()
-        html = '''
-                   <html>
-                       <body>
-                           <img src="data:image/png;base64,{}" />
-                       </body>
-                    <html>
-                '''
+        sio_histo = BytesIO()
+        plt.savefig(sio_histo, format='png')
+        data_histo = base64.encodebytes(sio_histo.getvalue()).decode()
         plt.close()
-        return html.format(data)
 
-    # 绘制散布图
-    @classmethod
-    def ScatterPlot(cls, user_id):
-        table_name = "vocabulary_%s" % user_id
+        # 散步图
+        result_Scatter = result
 
-        sql = "SELECT VALUE FROM %s" % table_name
-
-        cursor = cls.user_db.cursor()
-        cursor.execute(sql)  # 取出所有单词的数值
-        result = cursor.fetchall()
-        cursor.close()
-
-        # -----------
-        # 绘制图片
-        plt.plot(result, linestyle='', marker='.')
-        # 添加标题
+        plt.plot(result_Scatter, linestyle='', marker='.')
         plt.title("Scatter Diagram")
-        # -----------
+        sio_scatter = BytesIO()
+        plt.savefig(sio_scatter, format='png')
+        data_scatter = base64.encodebytes(sio_scatter.getvalue()).decode()
 
-        # 转成图片的步骤
-        sio = BytesIO()
-        plt.savefig(sio, format='png')
-        data = base64.encodebytes(sio.getvalue()).decode()
         html = '''
-               <html>
-                   <body>
-                       <img src="data:image/png;base64,{}" />
-                   </body>
-                <html>
-            '''
-        plt.close()
-        return html.format(data)
+                       <html>
+                           <body>
+                               <img src="data:image/png;base64,{}" />
+                               <img src="data:image/png;base64,{}" />
+                               <img src="data:image/png;base64,{}" />
+                           </body>
+                        <html>
+                    '''
+        return html.format(data_box, data_histo, data_scatter)
